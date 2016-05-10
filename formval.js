@@ -1,7 +1,7 @@
-// ランチorディナー選択	
+/* ランチorディナー選択	
   var time_lunch = document.getElementById('time_lunch');
     var time_dinner = document.getElementById('time_dinner');
-    var tax = 1.08; //実行の過程で値が変わらないものはconst(定数)として宣言しておく
+    const tax = 1.08; //実行の過程で値が変わらないものはconst(定数)として宣言しておく
     var rykn_array = [5000,6000,10500,12000]; //配列 array
     
     function dp_lunch(){
@@ -109,11 +109,24 @@
             return false;
         }
     }
-    
-/*さらにjQueryで書き換えると以下のようになる
-var tax = 1.08;
-var rykn_array = [5000,6000,10500,12000]; //配列 array
-
+ */   
+//さらにjQueryで書き換えると以下のようになる
+const tax = 1.08; //実行の過程で値が変わらないものは const(定数)と定義しておく
+var rykn_array = [5000,6000,10500,12000]; //配列 array インデックスは自動的に0からふられる
+var checkFlag = 0; //どこかにエラーがあれば1を代入
+//必須項目を配列にする
+//var getCheck = {"num":$('#num'),"tel":$('#tel'),"email":$('#email'),"addr":$('#addr'),"name_kana":$('#name_kana')};
+var getCheck = [$('#num'), $('#tel'), $('#email'), $('#addr'), $('#name_kana')];    
+   
+ /* テスト  
+  $('#sub').click(function(){ //送信ボタンのクリックイベント
+          for( var i in getCheck ){ //配列をループして,取り出したキーをiに代入する
+           //未入力の場合だけ色をつけたいので...
+          if(getCheck[i].val()==""){
+            getCheck[i].css('background-color','#ecc');	
+           }	
+         }
+       }); */
 
 
 $('#lunch').click(function(){  //ランチをクリック
@@ -123,12 +136,19 @@ $('#dinner').click(function(){  //ディナーをクリック
   $('#time_dinner').show(800);$('#time_lunch').hide(500);
 });
 
-function numCheck(){
-  num =document.frm.num.value;
-   if(!num.match(/^[0-9]+$/) || 1 > num || num > 10 ){
-   alert("半角数字で1~10で入力してください");
-  }
-} 
+
+$('#num').change(function(){
+  num = $('#num').val();
+  if( !num.match( /^[0-9]+$/ ) ||  num >10 || num < 1 ){
+     alert("半角数字で1~10で入力してください");
+     $(this).css('background-color','#ecc').focus();
+     $checkFlag=1; //エラーを持っている
+  }else{
+     $(this).css('background-color','#fff');
+     $checkFlag=0; //エラーなし
+   } 
+ });
+
 
 $('#total_chk').click( function(){
 //選択されたセレクトメニューの値を取得
@@ -148,52 +168,95 @@ $('#total_chk').click( function(){
    $('#total_price').val( (rykn_array[menu] * num * tax ).toLocaleString());  //合計して値を表示
  });
  
+ 
 //電話・eメール・住所入力
      //電話番号チェック
-     function telcheck(){
-      var tel = document.frm.tel.value;
-     // 対応形式「-」なしの6～11桁、「-」ありの時は13桁以下であるか否か
+     $('#tel').change(function(){
+     	var tel = $('#tel').val();
+     	// 対応形式「-」なしの6～11桁、「-」ありの時は13桁以下であるか否か
       if(!tel.match(/^[0-9-]{6,11}$|^[0-9-]{13}$/) ){
       alert("半角数字と-のみで入力してください");
-       }
-     }
+      $(this).css('background-color','#ecc').focus();
+        $checkFlag=1;
+     }else{
+      $(this).css('background-color','#fff');
+     	$checkFlag=0;
+      }
+       });
+ 
+     
     //eメールチェック
-     function alphcheck(){
-     var email = document.frm.email.value;
-    // @前は「英数字_-」使用可、@後ひとつ以上の「.」があるか、「.」の後に2文字以上英数字が入っているか否か
+    $('#email').change(function(){
+     var email = $('#email').val();
+     // @前は「英数字_-」使用可、@後ひとつ以上の「.」があるか、「.」の後に2文字以上英数字が入っているか否か
      if(!email.match(/^[\w_-]+@[\w\.-]+\.\w{2,}$/) ){
       alert("半角英数字と -_@ のみで正しく入力してください");
-     }
-    }   
-   //番地入力チェック
+      $(this).css('background-color','#ecc').focus();
+        $checkFlag=1;
+     }else{
+      $(this).css('background-color','#fff');
+     	$checkFlag=0;
+      }
+    });
+ 
+     
+   //番地入力チェック  //最終チェックも兼ねている
+    //上にある → var getCheck = [$('#num'), $('#tel'), $('#email'), $('#addr'), $('#name_kana')]; 
     function addcheck(){
-    var addr = document.frm.addr.value;
-   // 半角と全角の0-9まで  
-    if(!addr.match(/[0-9０-９]/) ){
-    return false;
-      }else{
-      	return true;
-       } 
-      }//関数内のreturnは呼び出し元に戻り値をかえして終了する
+       //var addr = $('#addr').val();
+       for( var i in getCheck ){ //配列をループして,取り出したキーをiに代入する
+        //未入力の場合だけ色をつけたいので...
+        if(getCheck[i].val()==""){
+          getCheck[i].css('background-color','#ecc');	
+           return false; //送信させない
+       }else{ 
+       	//入力されていたら,数字なのか,カタカナなのかなどをチェック
+      	   if($checkFlag==1){
+      	      return false; //送信させない
+          }else{
+           if(i==3){	 
+           	// 半角と全角の0-9まで  
+             if(!$('#addr').val().match(/[0-9０-９]/) ){
+               $('#addr').css('background-color','#ecc').focus(); 
+                 alert('番地まで入力してください');
+                 return false; //送信させない
+            }else{
+               $('#addr').css('background-color','#fff').focus();
+      	       } 
+             } //番地チェックの終わり
+           } //値チェックの終わり
+         } //未入力チェックの終わり
+       } //End for
+      return true; //送信する	
+    }; //End Function
+   
+
 
    //カタカナチェック
-    function kanacheck(){
-    var kana = document.frm.kana.value;
-    
-    if(!kana.match(/^[ァ-ン]+$/) ){
-    alert("フリガナは全角カタカナで");
+  $('#kana').change(function(){
+   	var kana = $('#kana').val();
+   	if(!kana.match(/^[ァ-ン]+$/) ){
+    alert("フリガナは全角カタカナで");    
+    $(this).css('background-color','#ecc').focus();
+       $checkFlag=1;
+   }else{
+    $(this).css('background-color','#fff');
+       $checkFlag=0;
       }
-    }
-  
-   function kanacheck(){
-    var name_kana = document.frm.kana.value;
-    
-    if(!name_kana.match(/^[ァ-ン]+$/) ){
-    return false;
-      }else{
-      	return true;
+     });
+   
+   //名前カタカナチェック
+    $('#name_kana').change(function(){
+      var name_kana = $('#name_kana').val();
+      if(!name_kana.match(/^[ァ-ン]+$/) ){
+      alert("フリガナは全角カタカナで");
+      $(this).css('background-color','#ecc').focus();
+        $checkFlag=1;
+     }else{
+      $(this).css('background-color','#fff');
+        $checkFlag=0;
       }
-    }
+     });
   
    //エンターキーで次のページに飛ばないようにする  
     document.onkeypress = enter;
@@ -202,4 +265,4 @@ $('#total_chk').click( function(){
             return false;
         }
     } 
-    */
+  

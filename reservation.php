@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="reservation.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="./jquery.datetimepicker.css"/>
     <link rel="shortcut icon" href="images/favicon.png" />
-    <script src="http://ajaxzip3.github.io/ajaxzip3.js"></script> //郵便番号
+    <script src="http://ajaxzip3.github.io/ajaxzip3.js"></script> <!-- 郵便番号 -->
 </head>
 
 <body>
@@ -39,7 +39,7 @@
         <option>11:30(ランチ)</option>
         <option>12:30(ランチ)</option>
       </select>
-      <select id="course_lunch">
+      <select name="course_lunch">
          <option>ご希望のコース</option>
          <option value="0">美食の歓びコース &yen;5,000</option>
          <option value="1">至福の午餐会コース &yen;6,000</option>
@@ -53,7 +53,7 @@
          <option>17:30(ディナー)</option>
          <option>18:00(ディナー)</option>
       </select> 
-      <select id="course_dinner">
+      <select name="course_dinner">
          <option>ご希望のコース</option>
          <option value="2">ムニュKAGURA ～神楽～ &yen;10,500</option>
          <option value="3">大塚スペシャルディナー &yen;12,000</option>
@@ -61,16 +61,17 @@
       </div>
       <br/>
       ■人数をご入力の上、合計金額をご確認ください<br/>
-      <input type="num" name="num" placeholder="1-10" size="2" onchange="numCheck()">名様
+      <input type="num" id="num" name="num" placeholder="1-10" size="2" onchange="numCheck()">名様
 
       <input type="button" id="total_chk" value="税込合計">
       <input type="num" name="total_price" id="total_price"> 円
       <br/>
       ■代表者様のご連絡先をご入力ください<br />
       <label>電話番号 </label> 
-      <input type="text" name="tel" id="tel" placeholder="000-0000-0000" onchange="telcheck();"><br />
+      <input type="text" name="tel" id="tel" placeholder="000-0000-0000" >
+      <br/>
       <label>メールアドレス</label>
-      <input type="text" name="email" id="email" placeholder="osteria@ost.com" onchange="alphcheck();"><br />
+      <input type="text" name="email" id="email" placeholder="osteria@ost.com" ><br />
       
       <label>郵便番号</label>
       <input type="text" name="zip1" maxlength="3" > - 
@@ -84,12 +85,12 @@
       <input type="text" name="addr" id="addr" size=60 <!-- onchange="addcheck() -->;">
       <!-- ↑　番地までの数字が含まれているかは、「送信ボタン」を押したタイミングでチェックするしかない。onchangeではイベントキャッチに問題あるということ。 -->
       <br />
-      <input type="text" name="kana" placeholder="フリガナ" size=60 onchange="kanacheck();">
+      <input type="text" id="kana" name="kana" placeholder="フリガナ" size=60 onchange="kanacheck();">
       <br />
 
-	  　お名前<br/>
+              お名前<br/>
       <input type="text" name="name" placeholder="例）伊太利亜　太郎" size="20" />
-      <input type="text" name="name_kana" placeholder="例）イタリア タロウ" size="20" />
+      <input type="text" id="name_kana" name="name_kana" placeholder="例）イタリア タロウ" size="20" />
       <br />
 	
       ■特別なご要望がありましたらご記入ください。<br />
@@ -99,7 +100,8 @@
 	  <input type="reset" value="リセット" />
 	
 	  <input type="button" value="確認" >
-	  <input type="button" onclick="addcheck()?submit():alert('住所は番地まで入力してください');	kanacheck()?submit():alert('名前のフリガナは全角カタカナで');" value="送信" /> 
+	  <input type="button"  onclick="addcheck()?submit():alert('入力に不備があります');" value="送信" /> 
+                          <!-- id="sub"  テスト用 -->
    </form>
 	
 
